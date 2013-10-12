@@ -1,0 +1,176 @@
+<html>
+  <head>
+    <title>Dumper - Leap</title>
+    <script src="../leap.js"></script>
+    <script>
+      var pausedFrame = null;
+      var latestFrame = null;
+      window.onkeypress = function(e) {
+        if (e.charCode == 32) {
+          if (pausedFrame == null) {
+            pausedFrame = latestFrame;
+          } else {
+            pausedFrame = null;
+          }
+        }
+      };
+      var counter = 10;
+      var movementGap = 5;
+      var fireGap = 20;
+      var storedHand = null;
+      var controller = new Leap.Controller({enableGestures: true});
+      var xDirection = 0;
+      var yDirection = 1;
+      var zDirection = 2;
+      controller.loop(function(frame) {
+        latestFrame = frame;
+        //console.log(godHand.palmPosition);
+        document.getElementById('out').innerHTML = (pausedFrame ? "<p><b>PAUSED</b></p>" : "") + "<div>"+(pausedFrame || latestFrame).dump()+"</div>";
+
+         counter++;
+         if(frame.hands.length>0)
+         {
+          var godHand = frame.hands[0];
+         if(!storedHand)
+         {
+          storedHand = godHand;
+         }
+           if(counter>=40)
+           {
+             counter = 0;
+
+             var isMovingY = false;
+             var isMovingX = false;
+
+            // Detect Z
+// /console.log(godHand.palmVelocity);
+            differenceZ = storedHand.palmPosition[zDirection].toFixed(0)-godHand.palmPosition[zDirection].toFixed(0);
+             if(Math.abs(differenceZ)>fireGap&&(godHand.palmVelocity[zDirection].toFixed(0)>0))
+             {
+               actionFire(godHand.fingers.length);
+             }
+            // Detect Y
+            differenceY = storedHand.palmPosition[yDirection].toFixed(0)-godHand.palmPosition[yDirection].toFixed(0);
+             if(Math.abs(differenceY)>movementGap)
+             {
+               isMovingY = true;
+             }
+            // Detect X
+            differenceX = storedHand.palmPosition[xDirection].toFixed(0)-godHand.palmPosition[xDirection].toFixed(0);
+             if(Math.abs(differenceX)>movementGap)
+             {
+               isMovingX = true;
+             }
+             // Diagonal
+             if(isMovingX&&isMovingY)
+             {
+              if(godHand.palmVelocity[xDirection].toFixed(0)>0&&godHand.palmVelocity[yDirection].toFixed(0)>0)
+              {
+                actionUpRight();
+              }
+              else if(godHand.palmVelocity[xDirection].toFixed(0)>0&&godHand.palmVelocity[yDirection].toFixed(0)<0)
+              {
+                actionDownRight();
+              }
+              else if(godHand.palmVelocity[xDirection].toFixed(0)<0&&godHand.palmVelocity[yDirection].toFixed(0)>0)
+              {
+                actionUpLeft();
+              }
+              else if(godHand.palmVelocity[xDirection].toFixed(0)<0&&godHand.palmVelocity[yDirection].toFixed(0)<0)
+              {
+                actionDownLeft();
+              }
+             }
+             // Left Right
+             else if(isMovingX)
+             {
+                if(godHand.palmVelocity[xDirection].toFixed(0)>0)
+                {
+                  actionRight();
+                }
+                else
+                {
+                  actionLeft();
+                }
+             }
+             // Up Down
+             else if(isMovingY)
+             {
+                if(godHand.palmVelocity[yDirection].toFixed(0)>0)
+                {
+                  actionUp();
+                }
+                else
+                {
+                  actionDown();
+                }
+             }
+             storedHand = godHand;
+           }
+         }
+      });
+      controller.on('ready', function() {
+          console.log("ready");
+      });
+      controller.on('connect', function() {
+          console.log("connect");
+      });
+      controller.on('disconnect', function() {
+          console.log("disconnect");
+      });
+      controller.on('focus', function() {
+          console.log("focus");
+      });
+      controller.on('blur', function() {
+          console.log("blur");
+      });
+      controller.on('deviceConnected', function() {
+          console.log("deviceConnected");
+      });
+      controller.on('deviceDisconnected', function() {
+          console.log("deviceDisconnected");
+      });
+
+      function actionFire(fingers)
+      {
+        console.log('Fire: '+fingers);
+      }
+      function actionUp()
+      {
+        console.log('Up');
+      }
+      function actionDown()
+      {
+        console.log('Down');
+      }
+      function actionLeft()
+      {
+        console.log('Left');
+      }
+      function actionRight()
+      {
+        console.log('Right');
+      }
+      function actionUpRight()
+      {
+        console.log('Up Right');
+      }
+      function actionDownRight()
+      {
+        console.log('Down Right');
+      }
+      function actionUpLeft()
+      {
+        console.log('Up Left');
+      }
+      function actionDownLeft()
+      {
+        console.log('Down Left');
+      }
+    </script>
+  </head>
+  <body>
+    <div id="out"></div>
+    <div id="log"></div>
+  </body>
+</html>
