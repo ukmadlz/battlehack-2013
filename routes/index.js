@@ -41,7 +41,7 @@ exports.takePayment = function(req,res){
             });
         }
     };
-    pp.takePayment(callbacks,req.query.token,req.query.price,req.query.payer_id);
+    pp.takePayment(callbacks,req.query.price,req.query.payer_id);
 }
 
 exports.echo = function(req,res){

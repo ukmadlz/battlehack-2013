@@ -1,5 +1,18 @@
 extends layout
 
 block content
-  h1= title
-  p Welcome to #{title}
+  h1 Login
+  button(type="button",onclick='goto()') Go
+  a(style="display:hidden;")
+  script.
+    var goto = function(){
+      $.ajax({
+        url:'/authorize'
+      }).done(function(data){
+        if(data.status !== 'error'){
+          console.log(data);
+          $('a').attr('href',data.data.authurl.href);
+          $('a').get(0).click();
+        }
+      });
+    }
