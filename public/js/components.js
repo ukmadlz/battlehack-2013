@@ -24,12 +24,11 @@ Crafty.c('Entity', {
 
 Crafty.c('Enemy', {
     init : function() {
-        this.speed = 2;
+        this.speed = 4;
         this.health = 10;
-        this.requires('Entity, Color, spr_enemy');
+        this.requires('Entity');
         this.vx = Math.min(Math.random()*15-5, this.speed);
         this.vy = Math.min(Math.random()*15-5, this.speed);
-        this.color('rgb(200,200,200)');
         
         this.bind('EnterFrame', function() {
             var newx = this.x + this.vx;
@@ -69,6 +68,12 @@ Crafty.c('Enemy', {
     setUser : function(val) {
         this.user_id = val;
     }
+});
+
+Crafty.c('Enemy_spr', {
+    init : function() {
+        this.requires('Enemy, spr_enemy');
+    },
 });
 
 Crafty.c('Player_enemy', {

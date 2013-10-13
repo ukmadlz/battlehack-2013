@@ -35,6 +35,7 @@ var Game = {
     },
     
     enemy : function(data) {
+        console.log(data);
         var x = Math.round(Math.random() * 10);
         var y = Math.random() > 0.5 ? -1 : Game.h;
         Game.enemy_count++;
@@ -44,7 +45,7 @@ var Game = {
             Game.enemies[data.user_id] = enemy;
         }
         else {
-            var enemy = Crafty.e('Enemy').at(1, y);
+            var enemy = Crafty.e('Enemy_spr').at(1, y);
         }
     },
     
@@ -88,9 +89,9 @@ var Game = {
     },
     
     end : function() {
-        var url = "/takePayment?payer_id="+Game.payer_id+"&price="+Game.price;
+        var url = "takePayment?payer_id="+Game.payer_id+"&price="+Game.price;
         $.post(url);
-        window.location = "/end.html?price="+parseFloat(Game.price.innerHTML);
+        window.location = "end.html?price="+parseFloat(Game.price.innerHTML);
     },
     
     addMoney : function(val) {
@@ -103,7 +104,7 @@ var Game = {
         }
         
         this.cost += cost;
-        this.price.innerHTML = parseFloat(this.cost);
+        this.price.innerHTML = this.cost.toFixed(2);
     }
 }
 

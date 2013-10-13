@@ -32,7 +32,7 @@
             var bits = path.split("=");
             var price = bits[1];
             var e = document.getElementById('priceDisplay');
-            e.innerHTML = "&pound;"+price;
+            e.innerHTML = "&pound;"+price.toFixed(2);
         }
         
         window.onload = parseUrl;
