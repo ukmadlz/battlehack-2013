@@ -111,7 +111,7 @@ Crafty.c('Player', {
     init : function() {
         this.speed = 2;
         this.safe = 0;
-        this.requires('Entity, Keyboard, Tween, Tint, spr_player')
+        this.requires('Entity, Keyboard, Tween, spr_player')
             .origin("center")
             .bind('KeyDown', function() {
                 if(this.isDown('UP_ARROW')) {
