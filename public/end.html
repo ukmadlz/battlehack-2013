@@ -15,12 +15,12 @@
         
         #priceContainer {
             background-color: white;
-            height: 200px;
+            height: 280px;
             left: 40%;
             opacity: 0.8;
             position: absolute;
             top: 45%;
-            width: 200px;
+            width: 210px;
             text-align:center;
             font-size: 2em;
         }
@@ -29,6 +29,7 @@
             padding: 0.5em;
         }
     </style>
+    <script type="text/javascript" src="js/jquery.min.js"></script>
     <script type="text/javascript">
         function parseUrl() {
             var path = window.location.search.substr(1);
@@ -39,6 +40,27 @@
         }
         
         window.onload = parseUrl;
+
+        /** Pull JustGiving E-mail **/
+        $(document).ready(function(){
+            $.ajax('https://api.justgiving.com/01881b78/v1/charity/search?q=heart',{
+                type:'get',
+                dataType:'json',
+                success:function(data){
+                    random = Math.floor(Math.random() * (data.charitySearchResults.length - 0 + 1)) + 0;
+                    var charityId = data.charitySearchResults[random].charityId;
+                    $.ajax('https://api.justgiving.com/01881b78/v1/charity/'+charityId,{
+                        type:'get',
+                        dataType:'json',
+                        success:function(data){
+                            var charityString = ' '+data.name+': '+data.emailAddress;
+                            $('#priceContainer').append(charityString);
+                        }
+                    });
+
+                }
+            });
+        });
     </script>
 </head>
 <body>
