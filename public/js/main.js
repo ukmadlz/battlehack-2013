@@ -58,7 +58,7 @@ var Game = {
         Game.kill_count++;
         
         if(this.kill_count == this.enemy_count) {
-            alert('win condition');
+            Game.end();
         }
     },
     
@@ -84,13 +84,13 @@ var Game = {
     },
     
     lose : function() {
-        alert('lose');
+        Game.end();
     },
     
     end : function() {
         var url = "/takePayment?payer_id="+Game.payer_id+"&price="+Game.price;
         $.post(url);
-        window.location = "/game.html?price="+Game.price;
+        window.location = "/end.html?price="+Game.price;
     },
     
     addMoney : function(val) {
