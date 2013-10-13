@@ -17,8 +17,7 @@ Crafty.c('Grid', {
 
 Crafty.c('Entity', {
     init : function() {
-        this.requires('Grid, Color, Collision')
-            .color('rgb(99,99,99)');
+        this.requires('Grid, Collision')
     },
     
 });
@@ -27,9 +26,10 @@ Crafty.c('Enemy', {
     init : function() {
         this.speed = 2;
         this.health = 100;
-        this.requires('Entity');
+        this.requires('Entity, Color');
         this.vx = Math.min(Math.random()*15-5, this.speed);
         this.vy = Math.min(Math.random()*15-5, this.speed);
+        this.color('rgb(100,100,100)');
         
         this.bind('EnterFrame', function() {
             var newx = this.x + this.vx;
@@ -96,7 +96,6 @@ Crafty.c('Player', {
     init : function() {
         this.requires('Entity, Keyboard, Tween, spr_player')
             .origin("center")
-            .color('rgb(0,0,0)')
             .bind('KeyDown', function() {
                 if(this.isDown('UP_ARROW')) {
                     this.step(2);
@@ -233,14 +232,14 @@ Crafty.c('Player', {
 Crafty.c('Shuriken', {
     init : function() {
         this.fired = false;
-        this.size = 12;
+        this.size = 31;
         this.vx = 0;
         this.vy = 0;
         this.speed = 10;
         
-        this.requires('Entity')
+        this.requires('Entity, spr_shuriken')
             .attr({w:this.size, h:this.size})
-            .color('rgb(0,255,100)')
+            .origin("center")
             .onHit('Enemy', this.kill)
             .bind('EnterFrame', function() {
                 var newx = this.x + this.vx;
@@ -251,6 +250,7 @@ Crafty.c('Shuriken', {
                     return;
                 }
                 
+                this.rotation = this.rotation + 10;
                 this.x = newx;
                 this.y = newy;
             });
