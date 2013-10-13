@@ -24,7 +24,7 @@ Crafty.c('Entity', {
 
 Crafty.c('Enemy', {
     init : function() {
-        this.speed = 2;
+        this.speed = 1;
         this.health = 10;
         this.requires('Entity, Color, Tint');
         this.vx = Math.min(Math.random()*15-5, this.speed);
@@ -144,7 +144,7 @@ Crafty.c('Player', {
                 
             });
         
-        this.health = 5;
+        this.health = 10;
         this.bar = document.getElementById('bar');
         this.dir = 2;
         this.shuriken();
@@ -293,7 +293,7 @@ Crafty.c('Player', {
     
     updateHealth : function(val) {
         var frame = Crafty.frame();
-        if(frame - this.safe < 10) {
+        if(frame - this.safe < 20) {
             return;
         }
         
@@ -301,17 +301,17 @@ Crafty.c('Player', {
         this.health += val;
         var color = 'green';
         
-        if(this.health < 4) {
+        if(this.health < 8) {
             color = 'yellow';
         }
-        if(this.health < 3) {
+        if(this.health < 6) {
             color = 'orange';
         }
-        if(this.health < 2) {
+        if(this.health < 3) {
             color = 'red';
         }
         
-        var length = (this.health / 5)*100;
+        var length = (this.health / 10)*100;
         
         bar.style.backgroundColor = color;
         bar.style.width = length+"%";

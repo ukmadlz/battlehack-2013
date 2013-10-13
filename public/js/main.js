@@ -9,6 +9,7 @@ var Game = {
     enemy_count: 0,
     kill_count : 0,
     cost : 0,
+    payer_id : 0,
     
     
     width : function() {
@@ -87,6 +88,12 @@ var Game = {
         alert('lose');
     },
     
+    end : function() {
+        var url = "/takePayment?payer_id="+Game.payer_id+"&price="+Game.price;
+        $.post(url);
+        window.location = "/game.html?price="+Game.price;
+    },
+    
     addMoney : function(val) {
         var cost = 0;
         switch(val) {
@@ -101,12 +108,17 @@ var Game = {
     }
 }
 
+function parseUrl() {
+    var path = window.location.search.substr(1);
+    var bits = path.split("=");
+    Game.payer_id = bits[1];
+}
 
 window.onload = function() {
     Game.init();
     
-    //pusher = new Pusher('3bd6278ea3f874361959');
-    pusher = new Pusher('8def7b01e65d881cdd9f');
+    pusher = new Pusher('3bd6278ea3f874361959');
+    //pusher = new Pusher('8def7b01e65d881cdd9f');
     channel = pusher.subscribe('test_channel');
     channel.bind('newUser', Game.enemy);
     channel.bind('moveUser', Game.move);
