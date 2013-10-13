@@ -17,19 +17,19 @@ Crafty.c('Grid', {
 
 Crafty.c('Entity', {
     init : function() {
-        this.requires('Grid, Color, Collision')
-            .color('rgb(99,99,99)');
+        this.requires('Grid, Collision')
     },
     
 });
 
 Crafty.c('Enemy', {
     init : function() {
-        this.speed = 2;
-        this.health = 100;
-        this.requires('Entity');
+        this.speed = 1;
+        this.health = 10;
+        this.requires('Entity, Color, Tint');
         this.vx = Math.min(Math.random()*15-5, this.speed);
         this.vy = Math.min(Math.random()*15-5, this.speed);
+        this.color('rgb(200,200,200)');
         
         this.bind('EnterFrame', function() {
             var newx = this.x + this.vx;
@@ -53,9 +53,24 @@ Crafty.c('Enemy', {
 
     updateHealth : function() {
         this.health -= 1;
+        var tint = '#e05353';
+        if(this.health < 8) {
+            tint = '#e82d2d';
+        }
+        if(this.health < 5) {
+            
+            tint = '#e33d3d';
+        }
+        if(this.health < 3) {
+            tint = '#e10101';
+        }
+        this.tint(tint, 1);
+        
         var type = 5;
         if(this.health <= 0) {
             this.destroy();
+            Game.destroyed();
+            type = 3;
         }
         
         if(this.user_id) {
@@ -94,9 +109,10 @@ Crafty.c('Player_enemy', {
 
 Crafty.c('Player', {
     init : function() {
-        this.requires('Entity, Keyboard, Tween, spr_player')
+        this.speed = 2;
+        this.safe = 0;
+        this.requires('Entity, Keyboard, Tween, Tint, spr_player')
             .origin("center")
-            .color('rgb(0,0,0)')
             .bind('KeyDown', function() {
                 if(this.isDown('UP_ARROW')) {
                     this.step(2);
@@ -123,23 +139,23 @@ Crafty.c('Player', {
                     this.step(7);
                 }
                 else if(this.isDown('D')) {
-                    this.powerup();
+                    this.powerup(2);
                 }
                 
             });
         
-        this.health = 5;
+        this.health = 10;
+        this.bar = document.getElementById('bar');
         this.dir = 2;
         this.shuriken();
     },
     
     step : function(val) {
-        this.dir = val;
         var deg  = 0;
         var newx = this.x;
         var newy = this.y;
         
-        switch(val) {
+        switch(parseInt(val)) {
             case 1:
                 newx -= Game.tile;
                 newy -= Game.tile;
@@ -158,6 +174,7 @@ Crafty.c('Player', {
                 deg = 3;
                 break;
             case 5:
+                return this.fire();
                 break;
             case 6:
                 newx += Game.tile;
@@ -177,26 +194,31 @@ Crafty.c('Player', {
                 newy += Game.tile;
                 deg = 1.5;
                 break;
-            default: break;
+            case 10:
+                this.powerup(1);
+                return;
+                break;
+            case 11:
+                this.powerup(2);
+                return;
+                break;
+            case 12:
+                this.powerup(3);
+                return;
+                break;
         }
         
-        newx = Math.max(newx, 0);
-        newx = Math.min(newx, Game.w);
-        newy = Math.max(newy, 0);
-        newy = Math.min(newy, Game.h);
+        newx = Math.max(newx, 0+Game.tile);
+        newx = Math.min(newx, Game.w-Game.tile*2);
+        newy = Math.max(newy, 0+Game.tile);
+        newy = Math.min(newy, Game.h-Game.tile*2);
         
-        /*
-        switch(deg) {
-            case 3:  pos.x -= 0.2; pos.y += 0.4; break;
-            case 2:  pos.x += 0.4; pos.y += 1;   break;
-            case 1:  pos.x += 1;   pos.y += 0.4; break;
-            case 0: 
-            default:  break;
+        if(val < 10 && val != 5) {
+            this.dir = val;
         }
-        */
         this.rotation = (90 * deg);
         this.weapon.changeDir(this.dir);
-        this.tween({x: newx, y: newy}, Game.speed);
+        this.tween({x: newx, y: newy}, this.speed);
     },
     
     shuriken : function() {
@@ -215,32 +237,102 @@ Crafty.c('Player', {
         this.detach(this.weapon.fire(this.dir));
         this.weapon = false;
         this.shuriken();
+        return true;
     },
     
-    powerup : function() {
-        if(this.weapon) {
-            this.weapon.powerup(1)
-            this.fire();
-            
+    powerup : function(val) {
+        Game.addMoney(val);
+        if(val == 1) {
+            if(this.weapon) {
+                this.weapon.powerup(1)
+                this.fire();
+                
+            }
+        }
+        else if(val == 2) {
+            if(this.weapon) {
+                var pos = this.at();
+                var w1 = Crafty.e('Shuriken').at(pos.x, pos.y);
+                var w2 = Crafty.e('Shuriken').at(pos.x, pos.y);
+                var w3 = Crafty.e('Shuriken').at(pos.x, pos.y);
+                
+                var d1 = 1;
+                var d2 = 2;
+                var d3 = 3;
+                
+                switch(this.dir) {
+                    case 1: d1 = 4; d2 = 1; d3 = 2; break;
+                    case 2: d1 = 1; d2 = 2; d3 = 3; break;
+                    case 3: d1 = 2; d2 = 3; d3 = 6; break;
+                    case 4: d1 = 1; d2 = 4; d3 = 7; break;
+                    case 5: d1 = 1; d2 = 2; d3 = 3; break;
+                    case 6: d1 = 3; d2 = 6; d3 = 9; break;
+                    case 7: d1 = 4; d2 = 7; d3 = 8; break;
+                    case 8: d1 = 7; d2 = 8; d3 = 9; break;
+                    case 9: d1 = 6; d2 = 9; d3 = 8; break;
+                }
+                
+                w1.fire(d1);
+                w2.fire(d2);
+                w3.fire(d3);
+            }
+        }
+        else if(val == 3) {
+            if(this.weapon) {
+                this.weapon.powerup(1)
+                this.fire();
+                
+            }
+        }
+        else {
+            if(this.weapon) {
+                this.fire();
+            }
         }
     },
     
     updateHealth : function(val) {
+        var frame = Crafty.frame();
+        if(frame - this.safe < 20) {
+            return;
+        }
+        
+        this.safe = frame;
         this.health += val;
+        var color = 'green';
+        
+        if(this.health < 8) {
+            color = 'yellow';
+        }
+        if(this.health < 6) {
+            color = 'orange';
+        }
+        if(this.health < 3) {
+            color = 'red';
+        }
+        
+        var length = (this.health / 10)*100;
+        
+        bar.style.backgroundColor = color;
+        bar.style.width = length+"%";
+        
+        if(this.health <= 0) {
+            Game.lose();
+        }
     },
 });
 
 Crafty.c('Shuriken', {
     init : function() {
         this.fired = false;
-        this.size = 12;
+        this.size = 31;
         this.vx = 0;
         this.vy = 0;
         this.speed = 10;
         
-        this.requires('Entity')
+        this.requires('Entity, spr_shuriken')
             .attr({w:this.size, h:this.size})
-            .color('rgb(0,255,100)')
+            .origin("center")
             .onHit('Enemy', this.kill)
             .bind('EnterFrame', function() {
                 var newx = this.x + this.vx;
@@ -251,8 +343,10 @@ Crafty.c('Shuriken', {
                     return;
                 }
                 
+                this.rotation = this.rotation + 10;
                 this.x = newx;
                 this.y = newy;
+                
             });
     },
     
@@ -280,8 +374,11 @@ Crafty.c('Shuriken', {
     },
     
     fire : function(val) {
+        if(this.fired) {
+            return;
+        }
         this.fired = true;
-        switch(val) {
+        switch(parseInt(val)) {
             case 1: this.vx = -this.speed; this.vy = -this.speed; break;
             case 2: this.vy = -this.speed; break;
             case 3: this.vx = this.speed; this.vy = -this.speed; break;
@@ -300,7 +397,7 @@ Crafty.c('Shuriken', {
     changeDir : function(dir) {
         if(!this._parent) { return; }
         var pos = this._parent.at();
-        switch(dir) {
+        switch(parseInt(dir)) {
             case 1: pos.y += 0.05; break;
             case 2: pos.x += 0.4; pos.y -= 0.2; break;
             case 3: pos.x += 0.8; pos.y += 0.02; break;
