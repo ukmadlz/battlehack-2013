@@ -24,11 +24,13 @@ Crafty.c('Entity', {
 
 Crafty.c('Enemy', {
     init : function() {
-        this.speed = 4;
+        this.speed = 6;
         this.health = 10;
         this.requires('Entity');
         this.vx = Math.min(Math.random()*15-5, this.speed);
         this.vy = Math.min(Math.random()*15-5, this.speed);
+        
+        this.attr({w:Game.tile+20, h:Game.tile+20});
         
         this.bind('EnterFrame', function() {
             var newx = this.x + this.vx;
