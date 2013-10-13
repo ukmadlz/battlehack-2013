@@ -1,7 +1,6 @@
 
 Crafty.scene("Game", function() {
     Player = Crafty.e('Player').at(Game.width()/2, Game.height()/2);
-    
     setTimeout(Game.default_enemies, 4000);
     
 });

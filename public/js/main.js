@@ -6,6 +6,10 @@ var Game = {
     pusher : {},
     channel : {},
     enemies : {},
+    enemy_count: 0,
+    kill_count : 0,
+    cost : 0,
+    
     
     width : function() {
         return this.w / this.tile;
@@ -23,18 +27,17 @@ var Game = {
         this.h = div.offsetHeight;
         this.w = div.offsetWidth;
         
-        //this.canvas.height = this.h;
-        //this.canvas.width  = this.w;
+        this.price = document.getElementById('price');
         
         Crafty.init(this.w, this.h);
         Crafty.background('rgb(0, 67, 171)');
         Crafty.scene("Loading");
     },
     
-
     enemy : function(data) {
         var x = Math.round(Math.random() * 10);
         var y = Math.random() > 0.5 ? -1 : Game.h;
+        Game.enemy_count++;
         if(data) {
             var enemy = Crafty.e('Player_enemy').at(1, y).image(data.handle_pic);
             enemy.setUser(data.user_id);
@@ -48,6 +51,14 @@ var Game = {
     default_enemies : function() {
         for(var i=0; i<5; i++) {
             Game.enemy();
+        }
+    },
+    
+    destroyed : function() {
+        Game.kill_count++;
+        
+        if(this.kill_count == this.enemy_count) {
+            alert('win condition');
         }
     },
     
@@ -66,14 +77,38 @@ var Game = {
          * 5 - player hit
          */
         $.post(url);
+    },
+    
+    leap : function(data) {
+        Player.step(data.message);
+    },
+    
+    lose : function() {
+        alert('lose');
+    },
+    
+    addMoney : function(val) {
+        var cost = 0;
+        switch(val) {
+            case 1: cost = 0.50; break;
+            case 2: cost = 1; break;
+            case 3: cost = 1.50; break;
+            default: break;
+        }
+        
+        this.cost += cost;
+        this.price.innerHTML = parseFloat(this.cost);
     }
 }
 
 
 window.onload = function() {
     Game.init();
-    pusher = new Pusher('3bd6278ea3f874361959');
+    
+    //pusher = new Pusher('3bd6278ea3f874361959');
+    pusher = new Pusher('8def7b01e65d881cdd9f');
     channel = pusher.subscribe('test_channel');
     channel.bind('newUser', Game.enemy);
     channel.bind('moveUser', Game.move);
+    channel.bind('player_events', Game.leap);
 }
