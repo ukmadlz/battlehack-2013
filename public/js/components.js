@@ -26,7 +26,7 @@ Crafty.c('Enemy', {
     init : function() {
         this.speed = 1;
         this.health = 10;
-        this.requires('Entity, Color, Tint');
+        this.requires('Entity, Color, spr_enemy');
         this.vx = Math.min(Math.random()*15-5, this.speed);
         this.vy = Math.min(Math.random()*15-5, this.speed);
         this.color('rgb(200,200,200)');
@@ -53,18 +53,6 @@ Crafty.c('Enemy', {
 
     updateHealth : function() {
         this.health -= 1;
-        var tint = '#e05353';
-        if(this.health < 8) {
-            tint = '#e82d2d';
-        }
-        if(this.health < 5) {
-            
-            tint = '#e33d3d';
-        }
-        if(this.health < 3) {
-            tint = '#e10101';
-        }
-        this.tint(tint, 1);
         
         var type = 5;
         if(this.health <= 0) {

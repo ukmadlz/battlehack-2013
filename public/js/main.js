@@ -30,7 +30,7 @@ var Game = {
         this.price = document.getElementById('price');
         
         Crafty.init(this.w, this.h);
-        Crafty.background("url(assets/background.jpg)");
+        Crafty.background("url(assets/bk.jpg)");
         Crafty.scene("Loading");
     },
     
@@ -96,9 +96,9 @@ var Game = {
     addMoney : function(val) {
         var cost = 0;
         switch(val) {
-            case 1: cost = 0.50; break;
-            case 2: cost = 1; break;
-            case 3: cost = 1.50; break;
+            case 1: cost = 0.10; break;
+            case 2: cost = 0.20; break;
+            case 3: cost = 0.30; break;
             default: break;
         }
         

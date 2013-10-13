@@ -1,0 +1,53 @@
+<html>
+<head>
+    <style>
+        
+        #content {
+            background-color: #E1EEFF;
+            background-image: url("assets/background.jpg");
+            background-position: center center;
+            background-repeat: no-repeat;
+            height: 600px;
+        }
+        
+        #priceContainer {
+            background-color: white;
+            height: 200px;
+            left: 40%;
+            opacity: 0.8;
+            position: absolute;
+            top: 45%;
+            width: 200px;
+            text-align:center;
+            font-size: 2em;
+        }
+        
+        #priceDisplay {
+            padding: 0.5em;
+        }
+    </style>
+    <script type="text/javascript">
+        function parseUrl() {
+            var path = window.location.search.substr(1);
+            var bits = path.split("=");
+            var price = bits[1];
+            var e = document.getElementById('priceDisplay');
+            e.innerHTML = "&pound;"+price;
+        }
+        
+        window.onload = parseUrl;
+    </script>
+</head>
+<body>
+<div id="content">
+
+<div id="priceContainer">
+    You have raised
+    <div id="priceDisplay"></div>
+    for Charity
+</div>
+
+</div>
+
+</body>
+</html>
