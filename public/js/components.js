@@ -24,7 +24,7 @@ Crafty.c('Entity', {
 
 Crafty.c('Enemy', {
     init : function() {
-        this.speed = 1;
+        this.speed = 2;
         this.health = 10;
         this.requires('Entity, Color, spr_enemy');
         this.vx = Math.min(Math.random()*15-5, this.speed);
