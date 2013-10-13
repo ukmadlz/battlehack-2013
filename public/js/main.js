@@ -90,7 +90,7 @@ var Game = {
     end : function() {
         var url = "/takePayment?payer_id="+Game.payer_id+"&price="+Game.price;
         $.post(url);
-        window.location = "/end.html?price="+Game.price;
+        window.location = "/end.html?price="+parseFloat(Game.price.innerHTML);
     },
     
     addMoney : function(val) {
