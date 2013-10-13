@@ -11,7 +11,6 @@ var Game = {
     cost : 0,
     payer_id : 0,
     
-    
     width : function() {
         return this.w / this.tile;
     },
@@ -31,7 +30,7 @@ var Game = {
         this.price = document.getElementById('price');
         
         Crafty.init(this.w, this.h);
-        Crafty.background('rgb(0, 67, 171)');
+        Crafty.background("url(assets/background.jpg)");
         Crafty.scene("Loading");
     },
     
