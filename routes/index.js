@@ -27,5 +27,5 @@ exports.authorize = function(req,res){
 }
 
 exports.echo = function(req,res){
-	res.json(req.params);
+	res.json(req.query);
 }
