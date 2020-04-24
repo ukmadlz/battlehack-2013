@@ -12,19 +12,19 @@
   },
   "license": "BSD-2-Clause",
   "dependencies": {
-    "ws": "0.4.25",
-    "underscore": "1.4.4",
-    "gl-matrix": "2.0.0"
+    "ws": "7.2.3",
+    "underscore": "1.10.2",
+    "gl-matrix": "3.3.0"
   },
   "devDependencies": {
-    "browserify": "2.25.0",
-    "mocha": "1.7.4",
-    "mocha-phantomjs": "3.0.0",
-    "phantomjs": "1.9.0-6",
-    "uglify-js": "2.3.6",
-    "chai": "1.6.1",
-    "nodemon": "0.7.8",
-    "jsdoc": "3.2.0-dev",
+    "browserify": "16.5.1",
+    "mocha": "7.1.1",
+    "mocha-phantomjs": "4.1.0",
+    "phantomjs": "2.1.7",
+    "uglify-js": "3.9.1",
+    "chai": "4.2.0",
+    "nodemon": "2.0.3",
+    "jsdoc": "3.6.4",
     "http-server": "*"
   }
 }
