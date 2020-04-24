@@ -1,0 +1,10 @@
+{
+  "groups": {
+    "default": {
+      "packages": [
+        "mikesShite/package.json",
+        "package.json"
+      ]
+    }
+  }
+}
