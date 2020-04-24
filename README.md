@@ -1,6 +1,8 @@
 battlehack-2013
 ===============
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/ukmadlz/battlehack-2013.svg)](https://greenkeeper.io/)
+
 Ninjas mother fucker
 
 Built by @ukmadlz, @curtis_h, @jakelprice and @hughrawlinson
